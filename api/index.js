@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const server = require('http').createServer();
+const forceSsl = require('express-force-ssl');
 const WebSocketServer = require('ws').Server;
 const path = require('path');
 
@@ -10,6 +11,14 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '..', 'client')));
+
+if (process.env.NODE_ENV === 'production') {
+  console.log('ATTEMPTING FORCESSL');
+  app.use(forceSsl);
+}
+
+// So that on heroku it recognises requests as https rather than http
+app.enable('trust proxy');
 
 app.get('*', function(req, res){
   res.sendFile(path.join(__dirname, '..', 'client', 'index.html'))
