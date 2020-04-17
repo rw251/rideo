@@ -1,4 +1,8 @@
-const wsConfig = { wssHost: `ws://${window.location.host}` };
+const wsConfig = { 
+  wssHost: window.location.hostname === 'localhost'
+    ? `ws://${window.location.host}`
+    : `wss://${window.location.host}`
+};
 const wsc = new WebSocket(wsConfig.wssHost);
 
 let connId;
