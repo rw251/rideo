@@ -4,6 +4,8 @@
   "description": "",
   "main": "api/index.js",
   "scripts": {
+    "open": "start http://localhost:3078",
+    "prestart": "npm run open",
     "start": "nodemon api/index.js"
   },
   "keywords": [],

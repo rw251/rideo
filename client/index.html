@@ -1,10 +1,62 @@
 <style>
+  html,body {
+    margin: 0;
+    padding: 0;
+    background: black;
+  }
   .page {
     display: none;
+    margin: 0 auto;
+    width: 100%;
+    justify-content: center;
   }
   video {
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+  }
+  .page {
+    position: fixed;
+  }
+  .landing-page-button {
+    font-size: 1.8rem;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+    background: #448AFF;
+    border: 0;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    overflow: hidden;
+    margin: 0.5rem;
+    min-width: 200px;
+    max-width: 500px;
+    min-height: 50px;
+    border-radius: 0.5rem;
+    padding: 1em;
+  }
+  #loader {
+    display: none;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: fixed;
+    font-size: 2rem;
+    width: 100vw;
+  }
+  #hosting-bar {
+    grid-template-columns: 1fr 1fr;
+    background: #f0d954;
+  }
+  #hosting-bar span {
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+    padding: 0 5px;
   }
 </style>
 
@@ -12,20 +64,23 @@
 <video id="localVideo" height="120" width="160" autoplay muted></video>
 
 <div id="videoArray">
-  <!-- <video id="video2ndperson" height="120" width="160" autoplay></video>
-  <video id="video3rdperson" height="120" width="160" autoplay></video>
-  <video id="video4thperson" height="120" width="160" autoplay></video>   -->
-</div>
-
-<div id="landing" class="page">
-  <button id="hostBtn">Host a new room</button>
-  <input id="room-id" type="text" placeholder="Enter the room number..." />
-  <button id="joinBtn">Join an existing room</button>
-  <button id="endBtn">Hang up</button>
-</div>
-<div id="hosting" class="page">
 
 </div>
+
+<div id="loader">
+  <span>Starting your webcam...</span>
+</div>
+
+<div id="landing-buttons" class="page">
+  <button id="hostBtn" class="landing-page-button">Host a new room</button>
+  <button id="joinBtn" class="landing-page-button">Join an existing room</button>
+</div>
+
+<div id="hosting-bar" class="page">
+  <span id="room-link"></span>
+  <button id="endBtn">End call</button>
+</div>
+
 <div id="joining" class="page">
 
 </div>

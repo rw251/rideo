@@ -24,7 +24,7 @@ let localStream = null;
 let roomDialog = null;
 let roomId = null;
 
-const $landing = document.getElementById('landing');
+const $landingButtons = document.getElementById('landing-buttons');
 const $hosting = document.getElementById('hosting');
 const $joining = document.getElementById('joining');
 
@@ -32,10 +32,32 @@ const $hostBtn = document.getElementById('hostBtn');
 const $joinBtn = document.getElementById('joinBtn');
 const $endBtn = document.getElementById('endBtn');
 
-const $localVideo = document.querySelector('#localVideo');
-const $videoArray = document.querySelector('#videoArray');
+const $localVideo = document.getElementById('localVideo');
+const $videoArray = document.getElementById('videoArray');
+const $loaderEl = document.getElementById('loader');
+const $hostingBarEl = document.getElementById('hosting-bar');
+const $roomLink = document.getElementById('room-link');
+
+const $pages = Array.from(document.querySelectorAll('.page'));
 
 const $remoteVideos = {};
+
+const setRoomLink = (id) => {
+  $roomLink.innerText = window.location.origin + '/' + id
+};
+const showLoader = () => {
+  $loaderEl.style.display = 'grid';
+}
+const hideLoader = () => {
+  $loaderEl.style.display = 'none';
+}
+const hideAllElements = () => {
+  $pages.forEach($page => $page.style.display = 'none');
+}
+const showHostingBar = () => {
+  hideAllElements();
+  $hostingBarEl.style.display = 'grid';
+}
 
 const addVideo = (id) => {
   const remoteStream = new MediaStream();
@@ -50,18 +72,23 @@ const addVideo = (id) => {
   $remoteVideos[id] = { el: videoEl, stream: remoteStream };
 };
 
+const showLandingButtons = () => {
+  hideAllElements();
+  $landingButtons.style.display = 'grid';
+}
+
 function init() {
   const [, action, value] = window.location.pathname.split('/');
   console.log(action, value);
   if(action === 'host') {
-    $hosting.style.display = 'block';
+    $hosting.style.display = 'grid';
   } else if(action === 'join') {
-    $joining.style.display = 'block';
+    $joining.style.display = 'grid';
   } else {
-    $landing.style.display = 'block';
+    showLandingButtons();
     $hostBtn.addEventListener('click', createRoom);
     $joinBtn.addEventListener('click', joinRoom);
-    $endBtn.addEventListener('click', hangUp);
+    //$endBtn.addEventListener('click', hangUp);
   }
 }
 
@@ -106,9 +133,13 @@ async function initiatePeerConnectionAndSendOffers(remoteIds) {
 }
 
 async function createRoom() {
+  showHostingBar();
+  setRoomLink(connId);
   wsc.send(JSON.stringify({ type:'host' }));
   if(!localStream) {
-    await openUserMedia();
+    showLoader();
+    await openUserMedia().catch(err => console.log(err));
+    hideLoader();
   } 
 }
 
@@ -121,7 +152,9 @@ async function joinRoom() {
 
 async function joinRoomById(roomId) {
   if(!localStream) {
-    await openUserMedia();
+    showLoader();
+    await openUserMedia().catch(err => console.log(err));
+    hideLoader();
   }
 
   wsc.send(JSON.stringify({type: 'join', roomId}));
